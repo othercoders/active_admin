@@ -1,5 +1,4 @@
 require 'meta_search'
-require 'devise'
 require 'kaminari'
 require 'formtastic'
 require 'sass'
