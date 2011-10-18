@@ -155,7 +155,7 @@ module ActiveAdmin
     def routes(rails_router)
       # Ensure that all the configurations (which define the routes)
       # are all loaded
-      load!
+      # load!
 
       router.apply(rails_router)
     end
