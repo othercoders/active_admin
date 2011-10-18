@@ -43,6 +43,7 @@ module ActiveAdmin
 
   class Railtie < ::Rails::Railtie
     config.i18n.load_path += Dir[File.expand_path('../active_admin/locales/*.yml', __FILE__)]
+    puts 'almost there'
     initializer "active_admin_comment_loader" do
       puts 'running active_admin_comment_loader'
       require 'active_admin/comments'
