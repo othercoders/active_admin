@@ -5,7 +5,7 @@ module ActiveAdmin
   # manually initialize kaminari for this model
   ::ActiveRecord::Base.send :include, Kaminari::ActiveRecordExtension
 
-  puts 'active admin comments comment'
+  puts "#{caller} active admin comments comment"
   class Comment < ActiveRecord::Base
 
     belongs_to :resource, :polymorphic => true
