@@ -7,6 +7,7 @@ module ActiveAdmin
 
   puts "#{caller} active admin comments comment"
   class Comment < ActiveRecord::Base
+    self.table_name = "active_admin_comments"
 
     belongs_to :resource, :polymorphic => true
     belongs_to :author, :polymorphic => true

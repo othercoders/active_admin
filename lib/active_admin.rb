@@ -40,7 +40,6 @@ module ActiveAdmin
   autoload :ViewFactory,              'active_admin/view_factory'
   autoload :ViewHelpers,              'active_admin/view_helpers'
   autoload :Views,                    'active_admin/views'
-  autoload :Comment,                  'active_admin/comments/comment'
 
   class Railtie < ::Rails::Railtie
     # Add load paths straight to I18n, so engines and application can overwrite it.
