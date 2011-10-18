@@ -5,7 +5,6 @@ module ActiveAdmin
   # manually initialize kaminari for this model
   ::ActiveRecord::Base.send :include, Kaminari::ActiveRecordExtension
 
-  puts "#{caller} active admin comments comment"
   class Comment < ActiveRecord::Base
     self.table_name = "active_admin_comments"
 
