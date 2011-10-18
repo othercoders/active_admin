@@ -40,14 +40,10 @@ module ActiveAdmin
   autoload :ViewFactory,              'active_admin/view_factory'
   autoload :ViewHelpers,              'active_admin/view_helpers'
   autoload :Views,                    'active_admin/views'
+  autoload :Comment,                  'active_admin/comments'
 
   class Railtie < ::Rails::Railtie
     config.i18n.load_path += Dir[File.expand_path('../active_admin/locales/*.yml', __FILE__)]
-    puts 'almost there'
-    initializer "active_admin_comment_loader" do
-      puts 'running active_admin_comment_loader'
-      require 'active_admin/comments'
-    end
   end
 
   # The instance of the configured application
