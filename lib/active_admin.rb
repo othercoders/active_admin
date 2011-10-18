@@ -40,10 +40,12 @@ module ActiveAdmin
   autoload :ViewFactory,              'active_admin/view_factory'
   autoload :ViewHelpers,              'active_admin/view_helpers'
   autoload :Views,                    'active_admin/views'
-  autoload :Comment,                  'active_admin/comments'
+  autoload :Comment,                  'active_admin/comments/comment'
 
   class Railtie < ::Rails::Railtie
-    config.i18n.load_path += Dir[File.expand_path('../active_admin/locales/*.yml', __FILE__)]
+    # Add load paths straight to I18n, so engines and application can overwrite it.
+    require 'active_support/i18n'
+    I18n.load_path += Dir[File.expand_path('../active_admin/locales/*.yml', __FILE__)]
   end
 
   # The instance of the configured application
@@ -72,7 +74,7 @@ module ActiveAdmin
     # Migration MoveAdminNotesToComments generated with version 0.2.2 might reference
     # to ActiveAdmin.default_namespace.
     delegate :default_namespace, :to => :application
-    ActiveAdmin::Deprecation.deprecate self, :default_namespace, 
+    ActiveAdmin::Deprecation.deprecate self, :default_namespace,
       "ActiveAdmin.default_namespace is deprecated. Please use ActiveAdmin.application.default_namespace"
 
   end
@@ -80,3 +82,4 @@ end
 
 ActiveAdmin::DependencyChecker.check!
 
+require 'active_admin/comments'
