@@ -21,7 +21,7 @@ module ActiveAdmin
         options[:class] += %w(batch_action)
         within @contents do
           li do
-            text_node link_to( "%s Selected" % batch_action.title, "#", options.merge( :action => batch_action.sym ) )
+            text_node link_to( "%s Selected" % batch_action.title, "#", options.merge( "data-action" => batch_action.sym ) )
           end
         end
       end

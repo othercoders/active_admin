@@ -53,7 +53,7 @@ $(function(){
   });
 
   $('#batch_actions_popover a.batch_action').click(function(e) {
-	$('#batch_action').val( $(e.target).attr("action") );
+	$('#batch_action').val( $(e.target).attr("data-action") );
 	$('#collection_selection').submit();
   });
 

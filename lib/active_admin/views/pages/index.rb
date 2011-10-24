@@ -53,7 +53,7 @@ module ActiveAdmin
           insert_tag view_factory.action_list_popover, :id => "batch_actions_popover" do
             input :name => :batch_action, :id => :batch_action, :type => :hidden
             active_admin_config.batch_actions.each do |the_action|
-              action the_action
+              action the_action if call_method_or_proc_on(self, the_action.display_if_block)
             end
           end
         end
