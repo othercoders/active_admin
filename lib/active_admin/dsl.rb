@@ -11,6 +11,14 @@ module ActiveAdmin
     def run_registration_block(config, &block)
       @config = config
       instance_eval &block
+      collection_action :batch_action, :method => :post do
+        config.batch_actions.each do |action|
+          if params[:batch_action].to_sym == action.sym
+            selection = resource_class.find(params[:collection_selection]) rescue []
+            instance_exec selection, &action.block
+          end
+        end
+      end
     end
 
     private
@@ -103,6 +111,21 @@ module ActiveAdmin
     #                          display this action item on.
     def action_item(options = {}, &block)
       config.add_action_item(options, &block)
+    end
+    
+    # Add a new batch action item to the resource
+    #
+    # @param [Symbol or String] title
+    # @param [Hash] options valid keys include:
+    #
+    def batch_action(title, options = {}, &block)
+      if title.is_a?( String )
+        sym = title.to_s.underscore.to_sym
+      else
+        sym = title
+        title = sym.to_s.titleize
+      end      
+      config.add_batch_action( sym, title, options, &block )
     end
 
     # Configure the index page for the resource

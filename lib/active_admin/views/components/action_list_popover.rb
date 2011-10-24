@@ -15,12 +15,13 @@ module ActiveAdmin
         super(options)
       end
       
-      def action(title, url, *args)
+      def action(batch_action, *args)
         options = args.extract_options!
-        
+        options[:class] ||= []
+        options[:class] += %w(batch_action)
         within @contents do
           li do
-            text_node link_to(title, url, options)
+            text_node link_to( "%s Selected" % batch_action.title, "#", options.merge( :action => batch_action.sym ) )
           end
         end
       end
