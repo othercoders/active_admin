@@ -16,6 +16,7 @@ module ActiveAdmin
           if params[:batch_action].to_sym == action.sym
             selection = resource_class.find(params[:collection_selection]) rescue []
             instance_exec selection, &action.block
+            break
           end
         end
       end

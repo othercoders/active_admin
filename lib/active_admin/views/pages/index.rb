@@ -36,6 +36,7 @@ module ActiveAdmin
               render_blank_slate
             end
           end
+          text_node( '</form>'.html_safe )
         end
 
         protected
