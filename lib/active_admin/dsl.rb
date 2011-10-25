@@ -10,9 +10,14 @@ module ActiveAdmin
     # Runs the registration block inside this object
     def run_registration_block(config, &block)
       @config = config
-      instance_eval &block
+      instance_eval &block if block_given?
+      register_batch_action_handler
+    end
+    
+    # Register the batch action path
+    def register_batch_action_handler
       collection_action :batch_action, :method => :post do
-        config.batch_actions.each do |action|
+        @config.batch_actions.each do |action|
           if params[:batch_action].to_sym == action.sym
             selection = resource_class.find(params[:collection_selection]) rescue []
             instance_exec selection, &action.block
