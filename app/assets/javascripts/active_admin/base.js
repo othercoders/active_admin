@@ -52,9 +52,22 @@ $(function(){
     }
   });
 
+  // Attach a click hanlder to each of the batch action items
   $('#batch_actions_popover a.batch_action').click(function(e) {
-	$('#batch_action').val( $(e.target).attr("data-action") );
+	
+	// Present optional confirmation prompt to user
+	var $target = $(e.target);
+	if ( $target.attr("data-request-confirm") ) {
+		if ( !confirm( $target.attr("data-request-confirm") ) ) {
+			$("#batch_actions_popover").fadeOut(100);
+			return false;
+		}
+	}
+	
+	// Submit the form, sending the request
+	$('#batch_action').val( $target.attr("data-action") );
 	$('#collection_selection').submit();
+	
   });
 
 });

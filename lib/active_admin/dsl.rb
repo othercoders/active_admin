@@ -115,18 +115,33 @@ module ActiveAdmin
     end
     
     # Add a new batch action item to the resource
+    # Provide a symbol/string to register the action, options, & block to execute on request
+    # 
+    # To unregister an existing action, just provide the symbol & pass false as the second param
     #
     # @param [Symbol or String] title
     # @param [Hash] options valid keys include:
+    # => :if is a proc that will be called to determine if the BatchAction should be displayed
+    # => :sort_order is used to sort the batch actions ascending
+    # => :confirm is a string which the user will have to accept in order to process the action
     #
     def batch_action(title, options = {}, &block)
+      
+      # Create symbol & title information
       if title.is_a?( String )
         sym = title.to_s.underscore.to_sym
       else
         sym = title
         title = sym.to_s.titleize
-      end      
-      config.add_batch_action( sym, title, options, &block )
+      end
+      
+      # Either add/remove the batch action
+      unless options == false     
+        config.add_batch_action( sym, title, options, &block )
+      else
+        config.remove_batch_action sym
+      end
+      
     end
 
     # Configure the index page for the resource

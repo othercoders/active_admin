@@ -53,3 +53,51 @@ You can change the filter label by passing a label option:
     filter :author, :label => 'Author'
 
 By default, Active Admin will try to use ActiveModel I18n to determine the label.
+
+## Batch Actions
+
+By default, the *Table* index view includes a way to quickly delete records from the listing,
+as well as an API for you to easily create your own "Batch Action" for handling a request to operate
+on multiple records at once.
+
+To create your own batch action, use the batch_action method
+
+	ActiveAdmin.register Post do
+	  batch_action :flag, :if => proc { can?( :flag, Post ) } do |selection|
+	    selection.each do |post|
+	      post.flag! :hot
+	    end
+	  end
+	end
+	
+If you wanted to modify the behavior of the provided "Delete" batch action, you can override by
+
+	ActiveAdmin.register Post do
+	  batch_action :destroy, :if => proc { can?( :destroy, Post ) } do |selection|
+	    redirect_to collection_path, :alert => "Didn't really delete these!"
+	  end
+	end
+	
+You can also remove batch actions by simply passing false as the second parameter
+
+	ActiveAdmin.register Post do
+	  batch_action :destroy, false
+	end
+	
+You can also change the order of batch actions, by providing a value for the :sort_order param
+
+	ActiveAdmin.register Post do
+	  batch_action :destroy, :sort_order => 1 do |selection|
+	    selection.each { |r| r.destroy }
+	    redirect_to collection_path, :notice => "#{selection.length} #{selection.length == 1 ? active_admin_config.resource_name : active_admin_config.plural_resource_name} Deleted"
+	  end
+	end
+	
+You can also request that the user confirm the action, before the action is performed
+
+	ActiveAdmin.register Post do
+	  batch_action :destroy, :confirm => "Are you sure you want to delete all of these?" do |selection|
+	    selection.each { |r| r.destroy }
+	    redirect_to collection_path, :notice => "#{selection.length} #{selection.length == 1 ? active_admin_config.resource_name : active_admin_config.plural_resource_name} Deleted"
+	  end
+	end

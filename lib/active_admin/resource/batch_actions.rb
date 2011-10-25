@@ -3,25 +3,46 @@ module ActiveAdmin
   class Resource
     module BatchActions
       
-      attr_reader :batch_actions
-      
       # @return [Array] The set of batch actions for this resource
       def batch_actions
-        @batch_actions ||= []
+        self.batch_actions_hash.values.sort
+      end
+      
+      # @return [Hash] The set of batch actions for this resource
+      def batch_actions_hash
+        @batch_actions_hash ||= { :destroy => default_batch_action }
+      end
+      
+      # @return [ActiveAdmin::BatchAction] The default "delete" action
+      def default_batch_action
+        action = ActiveAdmin::BatchAction.new :destroy, "Delete", :sort_order => 100, :confirm => I18n.t('active_admin.delete_confirmation') do |selection|
+          selection.each { |r| r.destroy }
+          redirect_to collection_path, :notice => "#{selection.length} #{selection.length == 1 ? active_admin_config.resource_name : active_admin_config.plural_resource_name} Deleted"
+        end
       end
       
       # Add a new batch item to a resource
       # @param [String] title
       # @param [Hash] options
-      #
+      # => :if is a proc that will be called to determine if the BatchAction should be displayed
+      # => :sort_order is used to sort the batch actions ascending
+      # => :confirm is a string which the user will have to accept in order to process the action
       #
       def add_batch_action(sym, title, options = {}, &block)
-        self.batch_actions << ActiveAdmin::BatchAction.new( sym, title, options, &block )
+        self.batch_actions_hash.merge!( sym => ActiveAdmin::BatchAction.new( sym, title, options, &block ) )
+      end
+      
+      # Remove a batch action
+      # @param [Symbol] sym
+      # @returns [ActiveAdmin::BatchAction] the batch action, if it was present
+      #
+      def remove_batch_action(sym)
+        self.batch_actions_hash.delete(sym.to_sym)
       end
       
       # Clears all the existing batch actions for this resource
       def clear_batch_actions!
-        @batch_actions = []
+        @batch_actions = {}
       end
       
       # Path to the batch action itself
@@ -33,8 +54,10 @@ module ActiveAdmin
   end
   
   class BatchAction
+    
+    include Comparable
 
-    attr_reader :block, :title, :sym
+    attr_reader :block, :title, :sym, :confirm
 
     # Create a Batch Action
     #
@@ -53,7 +76,7 @@ module ActiveAdmin
     # => You can provide an optional :if proc to optionally display the batch action
     #
     def initialize(sym, title, options = {}, &block)
-      @sym, @title, @options, @block = sym, title, options, block
+      @sym, @title, @options, @block, @confirm = sym, title, options, block, options[:confirm]
       @block ||= proc {}
     end
     
@@ -61,6 +84,16 @@ module ActiveAdmin
     # a default block always returning true will be returned.
     def display_if_block
       @options[:if] || proc { true }
+    end
+    
+    # Used for sorting
+    def sort_order
+      @options[:sort_order] || 10
+    end
+    
+    # sort operator
+    def <=>(other)
+      self.sort_order <=> other.sort_order
     end
 
   end
