@@ -42,7 +42,7 @@ module ActiveAdmin
       
       # Clears all the existing batch actions for this resource
       def clear_batch_actions!
-        @batch_actions = {}
+        @batch_actions_hash = {}
       end
       
       # Path to the batch action itself
