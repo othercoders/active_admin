@@ -134,7 +134,7 @@ module ActiveAdmin
       
       # Create symbol & title information
       if title.is_a?( String )
-        sym = title.to_s.underscore.to_sym
+        sym = title.titleize.gsub(' ', '').underscore.to_sym
       else
         sym = title
         title = sym.to_s.titleize
