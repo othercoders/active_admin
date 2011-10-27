@@ -49,5 +49,19 @@ describe ActiveAdmin::Resource::BatchActions do
     end
     
   end
+  
+  describe "#display_if_block" do
+
+    it "should return true by default" do
+      action = ActiveAdmin::BatchAction.new :default, "Default"
+      action.display_if_block.call.should == true
+    end
+
+    it "should return the :if block if set" do
+      action = ActiveAdmin::BatchAction.new :with_block, "With Block", :if => proc { false } 
+      action.display_if_block.call.should == false
+    end
+
+  end
 
 end
