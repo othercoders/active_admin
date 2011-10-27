@@ -101,3 +101,20 @@ You can also request that the user confirm the action, before the action is perf
 	    redirect_to collection_path, :notice => "#{selection.length} #{selection.length == 1 ? active_admin_config.resource_name : active_admin_config.plural_resource_name} Deleted"
 	  end
 	end
+	
+To include the column with checkboxes in after overriding the list of columns for the `index` block, use the following helper as seen below
+
+	ActiveAdmin.register Post do
+	
+	  batch_action :flag do |selection|
+	    selection.each { |p| p.flag! }
+		redirect_to collection_path, :notice => "#{selection.length} #{selection.length == 1 ? active_admin_config.resource_name : active_admin_config.plural_resource_name} Flagged"
+	  end
+	
+	  index do
+	    selectable_column
+	    column :title
+	    default_actions
+	  end
+	
+	end
