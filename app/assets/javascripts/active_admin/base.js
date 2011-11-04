@@ -1,4 +1,5 @@
 //= require "active_admin/vendor"
+//= require "active_admin/jquery.AAPopover.js"
 
 /* Active Admin JS */
 
@@ -9,16 +10,23 @@ $(function(){
     window.location.search = "";
     return false;
   });
+  
+  $("#batch_actions_button").AAPopover({autoOpen: false});
 
   // Batch actions stuff
   
-  $('#batch_actions_button').toggle(function() {
+  $('#batch_actions_button').click(function() {
     if (!$(this).hasClass("disabled")) {
-      $("#batch_actions_popover").fadeIn(50);
+      if ($("#batch_actions_popover").is(":hidden")) {
+        $(this).AAPopover("open");
+        return false;
+      } else {
+        $("#batch_actions_button").AAPopover("close");
+        return false;
+      }
     };
-  }, function() {
-    $("#batch_actions_popover").fadeOut(100);
   });
+  
   
   $('.index_table thead :checkbox').click(function() {
     if ($(this).attr('checked') == true) {
@@ -51,23 +59,25 @@ $(function(){
       
     }
   });
-
+  
   // Attach a click hanlder to each of the batch action items
   $('#batch_actions_popover a.batch_action').click(function(e) {
 	
-	// Present optional confirmation prompt to user
-	var $target = $(e.target);
-	if ( $target.attr("data-request-confirm") ) {
-		if ( !confirm( $target.attr("data-request-confirm") ) ) {
-			$("#batch_actions_popover").fadeOut(100);
-			return false;
-		}
-	}
+  	// Present optional confirmation prompt to user
+  	var $target = $(e.target);
+  	if ( $target.attr("data-request-confirm") ) {
+  		if ( !confirm( $target.attr("data-request-confirm") ) ) {
+  			$("#batch_actions_popover").fadeOut(100);
+  			return false;
+  		}
+  	}
 	
-	// Submit the form, sending the request
-	$('#batch_action').val( $target.attr("data-action") );
-	$('#collection_selection').submit();
+  	// Submit the form, sending the request
+  	$('#batch_action').val( $target.attr("data-action") );
+  	$('#collection_selection').submit();
 	
   });
+  
+  
 
 });
