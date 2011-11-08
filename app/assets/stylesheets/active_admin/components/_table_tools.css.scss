@@ -41,6 +41,17 @@ a.table_tools_button {
       width: 0;
     }
   }
+    
+  &.selected {
+    background: #F0F0F0;
+    @include box-shadow(0 1px 1px 0 rgba(0,0,0,0.1) inset);
+    color: #8a8a8a;
+    cursor: default;
+    
+    &:hover {
+      color: #8a8a8a;
+    }
+  }
 
 }
 

@@ -4,7 +4,7 @@
   var pluginName = 'AAPopover';
   
   var defaults = {
-    fadeInDuration: 100,
+    fadeInDuration: 20,
     fadeOutDuration: 100,
     autoOpen: true
   }
@@ -14,12 +14,17 @@
     this.$element = $(element);
     
     this.$popoverContent = null;
-
+    
+    
     this.options = $.extend( {}, defaults, options);
     
     if ($(this.$element.attr("href")).length > 0) {
       this.$popoverContent = $(this.$element.attr("href"));
     }
+    
+    // Create nipple
+    this.$popoverContent.prepend("<div class=\"popover_nipple\"></div>");
+    
     
     this._name = pluginName;
     
@@ -32,7 +37,9 @@
     var _this = this;
         
     this.$popoverContent.hide();
-
+    
+    this.$popoverContent.addClass("popover");
+    
     if (this.options.autoOpen == true) {
       this.$element.bind('click', function(){
         _this.open();
@@ -55,6 +62,29 @@
   AAPopover.prototype.open = function() {
     this.isOpen = true;
     this.$popoverContent.fadeIn(this.options.fadeInDuration);
+    
+    
+    // Center the popover under the opening element
+    
+    var centerOfButtonFromLeft = this.$element.offset().left + this.$element.outerWidth() / 2;
+    var centerOfPopoverFromLeft = this.$popoverContent.outerWidth() / 2;
+    var popoverLeftPos = centerOfButtonFromLeft - centerOfPopoverFromLeft;
+    this.$popoverContent.css('left', popoverLeftPos);
+    
+    // Center the nipple in the middle of the popover
+    
+    var bottomOfButtonFromTop = this.$element.offset().top + this.$element.outerHeight() + 10;
+    this.$popoverContent.css('top',  bottomOfButtonFromTop);
+    var $nipple = this.$popoverContent.find(".popover_nipple");
+    var centerOfnippleFromLeft = $nipple.outerWidth() / 2;
+    
+    console.log($nipple.outerWidth());
+    console.log($nipple.width());
+    
+    var nippleLeftPos = centerOfPopoverFromLeft - centerOfnippleFromLeft;
+    
+    $nipple.css('left', nippleLeftPos)
+    
   }
   
   AAPopover.prototype.close = function() {

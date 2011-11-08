@@ -4,11 +4,11 @@ describe("AAPopover", function() {
     this.$button = $(inject({
       el: 'a',
       id: 'my_popover_button',
-      attrs: {href: '#my_popover_content'}
+      attrs: {href: '#my_popover'}
     }));
     
-    this.$popoverContent = $(inject({
-      id: 'my_popover_content'
+    this.$popover = $(inject({
+      id: 'my_popover'
     }));
     
     this.$button.AAPopover({
@@ -22,25 +22,51 @@ describe("AAPopover", function() {
   describe("opening button / link is pressed", function() {
     it("should open the popover", function() {
       this.$button.trigger("click");
-      expect($("#my_popover_content")).toBeVisible();
+      expect($("#my_popover")).toBeVisible();
     });  
   });
   
-  describe("by default", function() {
+  describe("when initiated", function() {
     it("should be hidden", function() {
-      expect(this.$popoverContent).toBeHidden();
+      expect(this.$popover).toBeHidden();
+    });
+    
+    it("should be have class popover", function() {
+      expect(this.$popover).toHaveClass("popover");
+    });
+    
+    describe("nipple", function() {
+      it("should exist", function() {
+        expect(this.$popover).toContain(".popover_nipple");
+      });
     });
   });
   
   describe("when open is called", function() {
     beforeEach(function() {
-      expect(this.$popoverContent).toBeHidden();
+      expect(this.$popover).toBeHidden();
       this.$button.AAPopover('open');
     });
     
     it("should be open", function() {
-      expect(this.$popoverContent).toBeVisible();
+      expect(this.$popover).toBeVisible();
     });
+    
+    // @ToDo Can't figure out how to test this yet
+    //describe("positioning", function() {
+    //  beforeEach(function() {
+    //    
+    //  });
+    //  
+    //  it("should be centered horizontally to the button / link", function() {
+    //    expect(this.$popover.css('left')).toEqual("20px");
+    //  });
+    //  
+    //  it("should be under the button / link", function() {
+    //    expect(this.$popover.css('top')).toEqual("40px");
+    //  });
+    //});
+    
   });
   
   describe("when destroy is called", function() {
@@ -68,7 +94,7 @@ describe("AAPopover", function() {
       });
       
       it("should close", function() {
-        expect(this.$popoverContent).toBeHidden();
+        expect(this.$popover).toBeHidden();
       });
     });
     
@@ -78,7 +104,7 @@ describe("AAPopover", function() {
       });
       
       it("should close", function() {
-        expect(this.$popoverContent).toBeHidden();
+        expect(this.$popover).toBeHidden();
       });
     });
   });
@@ -93,7 +119,7 @@ describe("AAPopover", function() {
       });
       it("should not open when the link is clicked", function() {
         this.$button.trigger("click");
-        expect($("#my_popover_content")).toBeHidden();
+        expect($("#my_popover")).toBeHidden();
       });
     });
   });
